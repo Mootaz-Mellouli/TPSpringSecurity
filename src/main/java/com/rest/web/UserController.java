@@ -23,7 +23,7 @@ import com.rest.entity.User;
 import com.rest.service.UserService;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("users")
 public class UserController {
 	@Autowired
 	UserRepository userRepository;
@@ -59,5 +59,11 @@ public class UserController {
 		return userRepository.save(temp);
 		
 	}
+
+	@PostMapping("/users/add")
+	public User saveUser(@RequestBody String username, @RequestBody String password, @RequestBody String confirmedPassword ) {
+		return userService.saveUser(username, password, confirmedPassword);
+	}
+
 
 }

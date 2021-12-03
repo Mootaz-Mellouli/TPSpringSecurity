@@ -44,9 +44,10 @@ public class SecurityRestApplication implements CommandLineRunner{
 		// TODO Auto-generated method stub
 		Role adminRole= roleRepository.save(new Role(1, "ADMIN"));
 		Role userRole= roleRepository.save(new Role(2, "USER"));
-		
-		User user = userService.saveUser("USER", "USER", "USER");
+
 		User admin = userService.saveUser("ADMIN", "ADMIN", "ADMIN");
+		User user = userService.saveUser("USER", "USER", "USER");
+
 		Compte compte1 = compteRepository.save(new Compte(1, 1500.0, new Date(),null));
 		Compte compte2 = compteRepository.save(new Compte(2, 3000.0, new Date(),null));
 		Compte compte3 = compteRepository.save(new Compte(3, 6000.0, new Date(),null));
