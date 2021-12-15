@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.websocket.server.PathParam;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,10 +61,17 @@ public class UserController {
 		
 	}
 
-	@PostMapping("/users/add")
-	public User saveUser(@RequestBody String username, @RequestBody String password, @RequestBody String confirmedPassword ) {
-		return userService.saveUser(username, password, confirmedPassword);
+	@PostMapping("/register")
+	public User saveUser(@RequestBody UserForm userForm ) {
+		return userService.saveUser(userForm.getUsername(),userForm.getPassword(),userForm.getConfirmedPassword());
 	}
 
 
+}
+
+@Data
+class UserForm{
+	private String username;
+	private String password;
+	private String confirmedPassword;
 }

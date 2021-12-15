@@ -1,6 +1,8 @@
 package com.rest;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -44,8 +46,11 @@ public class SecurityRestApplication implements CommandLineRunner{
 		// TODO Auto-generated method stub
 		Role adminRole= roleRepository.save(new Role(1, "ADMIN"));
 		Role userRole= roleRepository.save(new Role(2, "USER"));
-
+		Set<Role> roles = new HashSet<Role>();
+		roles.add(new Role(1,"ADMIN"));
 		User admin = userService.saveUser("ADMIN", "ADMIN", "ADMIN");
+		admin.setRoles(roles);
+		userRepository.save(admin);
 		User user = userService.saveUser("USER", "USER", "USER");
 
 		Compte compte1 = compteRepository.save(new Compte(1, 1500.0, new Date(),null));

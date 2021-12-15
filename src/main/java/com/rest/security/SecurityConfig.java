@@ -9,9 +9,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -19,11 +21,17 @@ import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import com.rest.service.UserService;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+		prePostEnabled = true,
+		securedEnabled = true,
+		jsr250Enabled = true)
+
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 @Autowired
 UserService userDetailsService;
@@ -40,6 +48,7 @@ http.csrf()
 .authenticationEntryPoint(new Http403ForbiddenEntryPoint() {
 })
 .and()*/
+		/*
 .authenticationProvider(getProvider())
 .formLogin()
 .loginProcessingUrl("/login")
@@ -50,7 +59,8 @@ http.csrf()
 .logoutUrl("/logout")
 .logoutSuccessHandler(new AuthentificationLogoutSuccessHandler())
 .invalidateHttpSession(true)
-.and()
+.and() */
+
 .authorizeRequests()
 .antMatchers("/login").permitAll()
 .antMatchers("/logout").permitAll()
@@ -60,6 +70,12 @@ http.csrf()
 .antMatchers("/compte").hasAnyAuthority("USER", "ADMIN")
 .antMatchers("/compte/**").hasAnyAuthority("USER", "ADMIN")
 .anyRequest().permitAll();
+	http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) ;
+	http.addFilter(new JWTAuthenticationFilter(authenticationManager()));
+	http.addFilterBefore(new JWTAuthorizationFiler(),
+			UsernamePasswordAuthenticationFilter.class);
+
+
 }
 private class AuthentificationLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 	@Override
